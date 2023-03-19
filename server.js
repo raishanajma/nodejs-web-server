@@ -4,24 +4,39 @@ const requestListener = (request, response) => {
     response.setHeader(`Content-Type`, `text/html`);
     response.statusCode = 200;
 
-    const {method} = request;
+    const {method, url} = request;
 
-    if(method===`GET`) {
-        response.end(`Hello! -GET Method`);
+    if(url===`/`) {
+        if(method===`GET`){
+            response.end(`Ini adalah home page!`)
+        }
+        else {
+            response.end(`Halaman tidak daoat diakses dengan ${method} request!`)
+        }
     }
 
-    if(method===`POST`) {
-        let body = [];
+    else if(url===`/about`) {
+        if(method===`GET`) {
+            response.end(`Ini adalah halaman about!`)
 
-        request.on(`data`, (chunk) => {
-            body.push(chunk);
-        });
+        }
+        else if(method===`POST`) {
+            let body = [];
 
-        request.on(`end`, () => {
-            body = Buffer.concat(body).toString();
-            const {name} = JSON.parse(body);
-            response.end(`Hai, ${name}`);
-        });
+            request.on(`data`, (chunk) => {
+                body.push(chunk);
+            });
+    
+            request.on(`end`, () => {
+                body = Buffer.concat(body).toString();
+                const {name} = JSON.parse(body);
+                response.end(`Hai, ${name}`);
+            });
+        }
+    }
+    
+    else {
+        response.end(`Halaman tidak ditemukan!`);
     }
 };
 
@@ -31,4 +46,4 @@ const host = `localhost`;
 
 server.listen(port, host, () => {
     console.log(`Server berjalan pada http://${host}:${port}`);
-})
+});
