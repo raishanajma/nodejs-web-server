@@ -1,4 +1,3 @@
-const req = require("express/lib/request");
 const http = require(`http`);
 
 const requestListener = (request, response) => {
@@ -12,20 +11,22 @@ const requestListener = (request, response) => {
     }
 
     if(method===`POST`) {
-        response.end(`Hai! -POST Method`);
-    }
+        let body = [];
 
-    if(method===`PUT`) {
-        response.end(`Bonjour! -PUT Method`);
-    }
+        request.on(`data`, (chunk) => {
+            body.push(chunk);
+        });
 
-    if(method===`DELETE`) {
-        response.end(`Salam! -DELETE Method`);
+        request.on(`end`, () => {
+            body = Buffer.concat(body).toString();
+            const {name} = JSON.parse(body);
+            response.end(`Hai, ${name}`);
+        });
     }
 };
 
 const server = http.createServer(requestListener);
-const port = 500;
+const port = 5000;
 const host = `localhost`;
 
 server.listen(port, host, () => {
