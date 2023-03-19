@@ -1,22 +1,25 @@
 const http = require(`http`);
 
 const requestListener = (request, response) => {
-    response.setHeader(`Content-Type`, `text/html`);
-    response.statusCode = 200;
+    response.setHeader(`Content-Type`, `application/json`);
+    response.setHeader('X-Powered-By', 'NodeJS');
 
     const {method, url} = request;
 
     if(url===`/`) {
         if(method===`GET`){
+            response.statusCode = 200;
             response.end(`Ini adalah home page!`)
         }
         else {
+            response.statusCode = 400;
             response.end(`Halaman tidak daoat diakses dengan ${method} request!`)
         }
     }
 
     else if(url===`/about`) {
         if(method===`GET`) {
+            response.statusCode = 200;
             response.end(`Ini adalah halaman about!`)
 
         }
@@ -34,8 +37,9 @@ const requestListener = (request, response) => {
             });
         }
     }
-    
+
     else {
+        response.statusCode = 400;
         response.end(`Halaman tidak ditemukan!`);
     }
 };
