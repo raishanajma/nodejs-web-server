@@ -13,7 +13,9 @@ const requestListener = (request, response) => {
         }
         else {
             response.statusCode = 400;
-            response.end(`Halaman tidak daoat diakses dengan ${method} request!`)
+            response.end(JSON.stringify({
+                message: `Halaman tidak ditemukan!`,
+            }));
         }
     }
 
@@ -36,11 +38,19 @@ const requestListener = (request, response) => {
                 response.end(`Hai, ${name}`);
             });
         }
+        else {
+            response.statusCode = 400;
+            response.end(JSON.stringify({
+                message: `Halaman tidak ditemukan!`,
+            }));
+        }
     }
 
     else {
         response.statusCode = 400;
-        response.end(`Halaman tidak ditemukan!`);
+        response.end(JSON.stringify({
+            message: `Halaman tidak ditemukan!`,
+        }));
     }
 };
 
